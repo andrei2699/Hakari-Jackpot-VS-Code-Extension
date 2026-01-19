@@ -1,15 +1,18 @@
 import * as vscode from 'vscode';
-import { MediaController } from './MediaController';
+import { SidebarProvider } from './SidebarProvider';
 
 export class JackpotManager {
     private isRolling: boolean = false;
     private isFever: boolean = false;
-    private mediaController: MediaController;
+    private sidebar: SidebarProvider | undefined;
     private readonly feverDurationMs = 251000;
     private readonly rollDurationMs = 2000;
 
     constructor(context: vscode.ExtensionContext) {
-        this.mediaController = new MediaController(context);
+    }
+
+    public setSidebar(sidebar: SidebarProvider) {
+        this.sidebar = sidebar;
     }
 
     public async attemptGamble(manual: boolean = false) {
@@ -22,7 +25,7 @@ export class JackpotManager {
 
         this.isRolling = true;
 
-        await this.mediaController.playRollSound();
+        this.sidebar?.playRoll();
 
         const config = vscode.workspace.getConfiguration('hakari');
         const chance = config.get<number>('jackpotChance', 0.8);
@@ -45,7 +48,7 @@ export class JackpotManager {
 
         vscode.window.showInformationMessage("JACKPOT! FEVER TIME!");
 
-        this.mediaController.startFever();
+        this.sidebar?.startFever();
 
         setTimeout(() => {
             this.endFever();
@@ -55,16 +58,15 @@ export class JackpotManager {
     private handleLoss() {
         this.isRolling = false;
         vscode.window.showInformationMessage("Tch... Missed.");
-        this.mediaController.stopAudio();
+        this.sidebar?.stop();
     }
 
     private endFever() {
         this.isFever = false;
-        this.mediaController.stopFever();
+        this.sidebar?.stop();
         vscode.window.showInformationMessage("Fever mode ended.");
     }
 
     public dispose() {
-        this.mediaController.dispose();
     }
 }

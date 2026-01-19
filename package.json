@@ -2,6 +2,21 @@
     "name": "hakari-idle-death-gamble",
     "displayName": "Idle Death Gamble",
     "description": "Trigger a jackpot fever with dancing Hakari when your tests pass.",
+    "publisher": "andrei2699",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/andrei2699/Hakari-Jackpot-VS-Code-Extension"
+    },
+    "bugs": {
+        "url": "https://github.com/andrei2699/Hakari-Jackpot-VS-Code-Extension/issues"
+    },
+    "homepage": "https://github.com/andrei2699/Hakari-Jackpot-VS-Code-Extension",
+    "license": "MIT",
+    "keywords": [
+        "idle death gamble",
+        "hakari jackpot",
+        "vscode extension"
+    ],
     "version": "0.0.1",
     "icon": "assets/Hakari_logo.png",
     "engines": {
@@ -57,8 +72,10 @@
         "views": {
             "hakari-activity-bar": [
                 {
+                    "type": "webview",
                     "id": "hakari-sidebar",
-                    "name": "The Dancer"
+                    "name": "The Dancer",
+                    "icon": "assets/Hakari_logo.svg"
                 }
             ]
         }

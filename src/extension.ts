@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { JackpotManager } from './JackpotManager';
+import { SidebarProvider } from './SidebarProvider';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Idle Death Gamble is active. Good luck.');
@@ -22,6 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
             jackpotManager.attemptGamble();
         }
     });
+
+    const sidebarProvider = new SidebarProvider(context.extensionUri, jackpotManager);
+    jackpotManager.setSidebar(sidebarProvider);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider(SidebarProvider.viewType, sidebarProvider)
+    );
 
     context.subscriptions.push(jackpotManager, gambleCommand, taskListener);
 }
