@@ -19,6 +19,7 @@ You can customize the gamble in your `settings.json`:
 
 *   `hakari.jackpotChance`: Probability of winning (default: `0.8` / 80%).
 *   `hakari.triggerOnTestSuccess`: Automatically run the jackpot when tests pass (default: `true`).
+*   `hakari.disableFlashingLights`: Disable flashing colors and sparkles during Fever Mode (default: `false`).
 ## 📜 Credits
 
 *   **Music:** [TUCA DONKA [Brazilian Phonk] - CURSEDEVIL, DJ FKU, Skorde](https://www.youtube.com/watch?v=YDpNRw5geSA)

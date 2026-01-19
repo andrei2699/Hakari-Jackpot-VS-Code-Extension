@@ -34,11 +34,13 @@ suite('Extension Test Suite', () => {
     });
 
     test('Sidebar view should be registered', async () => {
-        const ext = vscode.extensions.getExtension('andrei2699.hakari-idle-death-gamble');
-        assert.ok(ext, 'Extension not found');
+        const extension = vscode.extensions.getExtension('andrei2699.hakari-idle-death-gamble')!;
+        await extension.activate();
+        assert.strictEqual(extension.isActive, true);
+    });
 
-        await ext.activate();
-
-        assert.ok(ext.isActive, 'Extension should be active');
+    test('Configuration should include disableFlashingLights', () => {
+        const config = vscode.workspace.getConfiguration('hakari');
+        assert.notStrictEqual(config.get('disableFlashingLights'), undefined);
     });
 });

@@ -54,6 +54,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         const feverUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'TUCA_DONKA.mp4'));
         const danceUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'hakari-dance.gif'));
 
+        const config = vscode.workspace.getConfiguration('hakari');
+        const disableFlashingLights = config.get<boolean>('disableFlashingLights', false);
+
         return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -162,6 +165,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                 <script>
                     const vscode = acquireVsCodeApi();
+                    const disableFlashingLights = ${disableFlashingLights};
                     
                     const rollBtn = document.getElementById('roll-btn');
                     const rollAudio = document.getElementById('roll-audio');
@@ -173,6 +177,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     let animationFrame;
 
                     function createSparkle() {
+                        if (disableFlashingLights) return;
                         const sparkle = document.createElement('div');
                         sparkle.classList.add('party-sparkle');
                         sparkle.style.left = Math.random() * 100 + '%';
@@ -204,7 +209,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                     function startFever() {
                         feverOverlay.style.display = 'flex';
-                        feverOverlay.classList.add('party-mode');
+                        if (!disableFlashingLights) {
+                            feverOverlay.classList.add('party-mode');
+                        }
                         feverAudio.volume = 1.0;
                         feverAudio.loop = true;
                         feverAudio.currentTime = 0;
