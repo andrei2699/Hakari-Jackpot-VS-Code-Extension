@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
+import { JackpotManager } from '../../JackpotManager';
 
 suite('Extension Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');
@@ -31,6 +32,42 @@ suite('Extension Test Suite', () => {
                 assert.fail(`${asset} missing`);
             }
         }
+    });
+
+    test('JackpotManager should track state correctly', async () => {
+        const mockContext = {
+            extensionUri: vscode.Uri.file('/'),
+            subscriptions: []
+        } as any;
+
+        const manager = new JackpotManager(mockContext);
+        let state = manager.getFeverState();
+        assert.strictEqual(state.isRolling, false);
+        assert.strictEqual(state.isFever, false);
+        assert.strictEqual(state.feverEndTime, undefined);
+    });
+
+    test('JackpotManager should not leak isRolling on error', async () => {
+        const mockContext = { extensionUri: vscode.Uri.file('/'), subscriptions: [] } as any;
+        const manager = new JackpotManager(mockContext);
+
+        const mockSidebar = {
+            playRoll: () => { throw new Error('Communication failed'); },
+            stop: () => { },
+            startFever: () => { },
+            updateConfig: () => { }
+        } as any;
+
+        manager.setSidebar(mockSidebar);
+
+        try {
+            await manager.attemptGamble(true);
+        } catch (e) {
+            // Expected
+        }
+
+        const state = manager.getFeverState();
+        assert.strictEqual(state.isRolling, false, 'isRolling should be reset after error');
     });
 
     test('Sidebar view should be registered', async () => {

@@ -27,7 +27,24 @@ export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri, jackpotManager);
     jackpotManager.setSidebar(sidebarProvider);
     context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider(SidebarProvider.viewType, sidebarProvider)
+        vscode.window.registerWebviewViewProvider(
+            SidebarProvider.viewType,
+            sidebarProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true
+                }
+            }
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('hakari.disableFlashingLights')) {
+                const config = vscode.workspace.getConfiguration('hakari');
+                sidebarProvider.updateConfig(config.get<boolean>('disableFlashingLights', false));
+            }
+        })
     );
 
     context.subscriptions.push(jackpotManager, gambleCommand, taskListener);

@@ -15,7 +15,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         context: vscode.WebviewViewResolveContext,
         _token: vscode.CancellationToken,
     ) {
-        console.log('SidebarProvider.resolveWebviewView called');
         this._view = webviewView;
 
         webviewView.webview.options = {
@@ -35,6 +34,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 }
             }
         });
+
+        const state = this._jackpotManager.getFeverState();
+        if (state.isFever && state.feverEndTime) {
+            const remaining = state.feverEndTime - Date.now();
+            if (remaining > 0) {
+                setTimeout(() => {
+                    this._view?.webview.postMessage({ type: 'startFever', duration: remaining });
+                }, 500);
+            }
+        }
     }
 
     public playRoll() {
@@ -47,6 +56,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     public stop() {
         this._view?.webview.postMessage({ type: 'stop' });
+    }
+
+    public updateConfig(disableFlashingLights: boolean) {
+        this._view?.webview.postMessage({ type: 'updateConfig', disableFlashingLights });
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {
@@ -74,6 +87,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                         overflow: hidden;
                         height: 100vh;
                         position: relative;
+                        background-color: var(--vscode-sideBar-background);
                     }
                     button {
                         background-color: var(--vscode-button-background);
@@ -165,7 +179,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                 <script>
                     const vscode = acquireVsCodeApi();
-                    const disableFlashingLights = ${disableFlashingLights};
+                    let disableFlashingLights = ${disableFlashingLights};
                     
                     const rollBtn = document.getElementById('roll-btn');
                     const rollAudio = document.getElementById('roll-audio');
@@ -175,6 +189,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     const sparklesContainer = document.getElementById('sparkles-container');
 
                     let animationFrame;
+                    let sparkleInterval;
 
                     function createSparkle() {
                         if (disableFlashingLights) return;
@@ -199,35 +214,53 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                                 rollAudio.play().catch(e => console.error('Audio play failed', e));
                                 break;
                             case 'startFever':
-                                startFever();
+                                startFever(message.duration);
                                 break;
                             case 'stop':
                                 stopAll();
                                 break;
+                            case 'updateConfig':
+                                disableFlashingLights = message.disableFlashingLights;
+                                if (disableFlashingLights) {
+                                    feverOverlay.classList.remove('party-mode');
+                                    sparklesContainer.innerHTML = '';
+                                } else if (feverOverlay.style.display === 'flex') {
+                                    feverOverlay.classList.add('party-mode');
+                                }
+                                break;
                         }
                     });
 
-                    function startFever() {
+                    function startFever(resumeDuration) {
                         feverOverlay.style.display = 'flex';
                         if (!disableFlashingLights) {
                             feverOverlay.classList.add('party-mode');
                         }
                         feverAudio.volume = 1.0;
                         feverAudio.loop = true;
-                        feverAudio.currentTime = 0;
+
+                        const duration = resumeDuration || (4 * 60 * 1000 + 11 * 1000);
+                        const endTime = Date.now() + duration;
+
+                        // Calculate offset for audio if resuming
+                        if (resumeDuration) {
+                            const totalDuration = (4 * 60 * 1000 + 11 * 1000);
+                            const playedSoFar = (totalDuration - resumeDuration) / 1000;
+                            feverAudio.currentTime = playedSoFar % feverAudio.duration || 0;
+                        } else {
+                            feverAudio.currentTime = 0;
+                        }
+                        
                         feverAudio.play().catch(e => console.error('Audio play failed', e));
                         
-                        const sparkleInterval = setInterval(createSparkle, 200);
-
-                        const duration = 4 * 60 * 1000 + 11 * 1000;
-                        const endTime = Date.now() + duration;
+                        if (sparkleInterval) clearInterval(sparkleInterval);
+                        sparkleInterval = setInterval(createSparkle, 200);
 
                         function updateTimer() {
                             const now = Date.now();
                             const difference = endTime - now;
 
                             if (difference <= 0) {
-                                clearInterval(sparkleInterval);
                                 stopAll();
                                 return;
                             }
@@ -255,6 +288,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                         feverOverlay.style.display = 'none';
                         feverOverlay.classList.remove('party-mode');
                         sparklesContainer.innerHTML = '';
+                        if (sparkleInterval) clearInterval(sparkleInterval);
                         rollAudio.pause();
                         rollAudio.currentTime = 0;
                         feverAudio.pause();
