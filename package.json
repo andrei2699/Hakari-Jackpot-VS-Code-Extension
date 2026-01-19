@@ -1,0 +1,85 @@
+{
+    "name": "hakari-idle-death-gamble",
+    "displayName": "Idle Death Gamble",
+    "description": "Trigger a jackpot fever with dancing Hakari when your tests pass.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "hakari.gamble",
+                "title": "Idle Death Gamble: Manual Roll"
+            }
+        ],
+        "configuration": {
+            "title": "Idle Death Gamble",
+            "properties": {
+                "hakari.jackpotChance": {
+                    "type": "number",
+                    "default": 0.8,
+                    "description": "Probability of hitting a Jackpot (0.0 - 1.0)."
+                },
+                "hakari.gifPosition": {
+                    "type": "string",
+                    "enum": [
+                        "CurrentColumn",
+                        "Beside"
+                    ],
+                    "default": "Beside",
+                    "description": "Where the dancer appears (Beside uses a separate column)."
+                },
+                "hakari.triggerOnTestSuccess": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically roll the slots when your integrated test runner passes."
+                }
+            }
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "hakari-activity-bar",
+                    "title": "Idle Death Gamble",
+                    "icon": "assets/icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "hakari-activity-bar": [
+                {
+                    "id": "hakari-sidebar",
+                    "name": "The Dancer"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/mocha": "^10.0.10",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.80.0",
+        "@typescript-eslint/eslint-plugin": "^7.0.0",
+        "@typescript-eslint/parser": "^7.0.0",
+        "@vscode/test-electron": "^2.3.9",
+        "eslint": "^8.57.0",
+        "glob": "^10.3.10",
+        "mocha": "^10.3.0",
+        "typescript": "^5.3.3"
+    }
+}
