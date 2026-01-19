@@ -3,6 +3,7 @@
     "displayName": "Idle Death Gamble",
     "description": "Trigger a jackpot fever with dancing Hakari when your tests pass.",
     "version": "0.0.1",
+    "icon": "assets/Hakari_logo.png",
     "engines": {
         "vscode": "^1.80.0"
     },
@@ -49,7 +50,7 @@
                 {
                     "id": "hakari-activity-bar",
                     "title": "Idle Death Gamble",
-                    "icon": "assets/icon.svg"
+                    "icon": "assets/Hakari_logo.svg"
                 }
             ]
         },

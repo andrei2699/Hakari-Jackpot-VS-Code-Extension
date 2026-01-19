@@ -94,8 +94,8 @@ export class MediaController {
     }
 
     private getAudioWebviewContent(webview: vscode.Webview): string {
-        const rollUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'assets', 'roll.wav'));
-        const feverUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'assets', 'fever_theme.mp3'));
+        const rollUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'assets', 'jackpot.webm'));
+        const feverUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'assets', 'TUCA_DONKA.mp4'));
 
         return `<!DOCTYPE html>
         <html lang="en">
@@ -133,7 +133,7 @@ export class MediaController {
     }
 
     private getDancerWebviewContent(webview: vscode.Webview): string {
-        const danceUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'assets', 'dancer.gif'));
+        const danceUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'assets', 'hakari-dance.gif'));
 
         return `<!DOCTYPE html>
         <html lang="en">
