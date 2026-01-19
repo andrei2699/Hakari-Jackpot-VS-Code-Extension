@@ -106,18 +106,43 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                         align-items: center;
                         z-index: 100;
                         display: none;
+                        transition: background-color 0.2s ease;
+                    }
+                    #fever-overlay.party-mode {
+                        animation: disco 0.5s infinite alternate;
+                    }
+                    @keyframes disco {
+                        0% { background-color: #ff00ff; box-shadow: inset 0 0 100px #00ffff; }
+                        25% { background-color: #00ffff; box-shadow: inset 0 0 100px #ffff00; }
+                        50% { background-color: #ffff00; box-shadow: inset 0 0 100px #ff00ff; }
+                        75% { background-color: #000000; box-shadow: inset 0 0 100px #ffffff; }
+                        100% { background-color: #ff0000; box-shadow: inset 0 0 100px #0000ff; }
                     }
                     #fever-overlay img {
                         max-width: 100%;
                         max-height: 80%;
                         object-fit: contain;
+                        filter: drop-shadow(0 0 20px gold);
                     }
                     #timer {
                         color: gold;
-                        font-size: 2em;
+                        font-size: 2.5em;
                         font-weight: bold;
                         margin-top: 10px;
-                        text-shadow: 0 0 10px red;
+                        text-shadow: 0 0 10px red, 0 0 20px black;
+                        z-index: 110;
+                    }
+                    .party-sparkle {
+                        position: absolute;
+                        width: 10px;
+                        height: 10px;
+                        background: white;
+                        border-radius: 50%;
+                        animation: sparkle 1s infinite alternate;
+                    }
+                    @keyframes sparkle {
+                        from { opacity: 0; transform: scale(0); }
+                        to { opacity: 1; transform: scale(1.5); }
                     }
 				</style>
 			</head>
@@ -127,6 +152,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 <button id="roll-btn">MANUAL ROLL</button>
 
                 <div id="fever-overlay">
+                    <div id="sparkles-container" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
                     <img src="${danceUri}" alt="Hakari Dance">
                     <div id="timer">04:11:00</div>
                 </div>
@@ -142,8 +168,19 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     const feverAudio = document.getElementById('fever-audio');
                     const feverOverlay = document.getElementById('fever-overlay');
                     const timerElement = document.getElementById('timer');
+                    const sparklesContainer = document.getElementById('sparkles-container');
 
                     let animationFrame;
+
+                    function createSparkle() {
+                        const sparkle = document.createElement('div');
+                        sparkle.classList.add('party-sparkle');
+                        sparkle.style.left = Math.random() * 100 + '%';
+                        sparkle.style.top = Math.random() * 100 + '%';
+                        sparkle.style.background = \`hsl(\${Math.random() * 360}, 100%, 50%)\`;
+                        sparklesContainer.appendChild(sparkle);
+                        setTimeout(() => sparkle.remove(), 1000);
+                    }
 
                     rollBtn.addEventListener('click', () => {
                         vscode.postMessage({ type: 'roll' });
@@ -167,11 +204,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                     function startFever() {
                         feverOverlay.style.display = 'flex';
+                        feverOverlay.classList.add('party-mode');
                         feverAudio.volume = 1.0;
                         feverAudio.loop = true;
                         feverAudio.currentTime = 0;
                         feverAudio.play().catch(e => console.error('Audio play failed', e));
                         
+                        const sparkleInterval = setInterval(createSparkle, 200);
+
                         const duration = 4 * 60 * 1000 + 11 * 1000;
                         const endTime = Date.now() + duration;
 
@@ -180,6 +220,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                             const difference = endTime - now;
 
                             if (difference <= 0) {
+                                clearInterval(sparkleInterval);
                                 stopAll();
                                 return;
                             }
@@ -205,6 +246,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                     function stopAll() {
                         feverOverlay.style.display = 'none';
+                        feverOverlay.classList.remove('party-mode');
+                        sparklesContainer.innerHTML = '';
                         rollAudio.pause();
                         rollAudio.currentTime = 0;
                         feverAudio.pause();

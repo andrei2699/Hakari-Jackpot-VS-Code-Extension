@@ -2,11 +2,14 @@
 
 Turn your coding sessions into a high-stakes gamble. When you hit the jackpot, the editor transforms into a 4-minute and 11-second "fever" state featuring **Tuka Donka** and Hakari’s legendary dance.
 
+> [!WARNING]
+> **Photosensitivity Warning:** This extension features fast-flashing colors and "Party Mode" visual effects during the Jackpot Fever. Please use with caution if you are sensitive to flashing lights.
+
 ## ⚡ Features
 
 *   **The Jackpot System:** Every time you pass a test or click the gamble button, there is a chance to hit the Jackpot.
-*   **Fever Mode:** On a successful roll, the "Tuka Donka" Phonk track plays for exactly 4 minutes and 11 seconds (Hakari's infinite cursed energy duration).
-*   **Visual Hype:** A configurable GIF of Hakari dancing appears in the corner of your editor during Fever Mode.
+*   **Fever Mode:** On a successful roll, the "Tuka Donka" Phonk track plays for exactly 4 minutes and 11 seconds.
+*   **Party Mode Visuals:** During Fever Mode, the sidebar comes alive with **flashing background colors**, sparkles, and Hakari dancing to the beat.
 *   **Live Timer:** A pulsing gold timer counts down the invincibility period.
 *   **Slot Machine SFX:** Authentic rolling sounds while the extension "calculates" your luck.
 
@@ -15,9 +18,7 @@ Turn your coding sessions into a high-stakes gamble. When you hit the jackpot, t
 You can customize the gamble in your `settings.json`:
 
 *   `hakari.jackpotChance`: Probability of winning (default: `0.8` / 80%).
-*   `hakari.gifPosition`: Choose where the dancer appears (`Beside` [default] or `CurrentColumn`).
-*   `hakari.triggerOnTestSuccess`: Automatically roll the slots when your integrated test runner passes.
-
+*   `hakari.triggerOnTestSuccess`: Automatically run the jackpot when tests pass (default: `true`).
 ## 📜 Credits
 
 *   **Music:** [TUCA DONKA [Brazilian Phonk] - CURSEDEVIL, DJ FKU, Skorde](https://www.youtube.com/watch?v=YDpNRw5geSA)

@@ -44,15 +44,6 @@
                     "default": 0.8,
                     "description": "Probability of hitting a Jackpot (0.0 - 1.0)."
                 },
-                "hakari.gifPosition": {
-                    "type": "string",
-                    "enum": [
-                        "CurrentColumn",
-                        "Beside"
-                    ],
-                    "default": "Beside",
-                    "description": "Where the dancer appears (Beside uses a separate column)."
-                },
                 "hakari.triggerOnTestSuccess": {
                     "type": "boolean",
                     "default": true,
