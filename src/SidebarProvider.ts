@@ -167,6 +167,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                     function startFever() {
                         feverOverlay.style.display = 'flex';
+                        feverAudio.volume = 1.0;
+                        feverAudio.loop = true;
                         feverAudio.currentTime = 0;
                         feverAudio.play().catch(e => console.error('Audio play failed', e));
                         
@@ -180,6 +182,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                             if (difference <= 0) {
                                 stopAll();
                                 return;
+                            }
+
+                            // Fade out in last 5 seconds
+                            if (difference < 5000) {
+                                feverAudio.volume = Math.max(0, difference / 5000);
                             }
 
                             const minutes = Math.floor(difference / 60000);
