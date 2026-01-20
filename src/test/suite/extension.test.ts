@@ -77,9 +77,11 @@ suite('Extension Test Suite', () => {
         assert.strictEqual(extension.isActive, true);
     });
 
-    test('Configuration should include disableFlashingLights', () => {
+    test('Configuration should include disableFlashingLights and feverSpeed', () => {
         const config = vscode.workspace.getConfiguration('hakari');
         assert.notStrictEqual(config.get('disableFlashingLights'), undefined);
+        assert.notStrictEqual(config.get('feverSpeed'), undefined);
+        assert.strictEqual(typeof config.get('feverSpeed'), 'number');
     });
 
     test('Webview template files should exist', async () => {
@@ -118,7 +120,8 @@ suite('Extension Test Suite', () => {
             '{{feverUri}}',
             '{{lossUri}}',
             '{{danceUri}}',
-            '{{disableFlashingLights}}'
+            '{{disableFlashingLights}}',
+            '{{feverSpeed}}'
         ];
 
         for (const placeholder of requiredPlaceholders) {
