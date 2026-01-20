@@ -63,8 +63,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {
-        const rollUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'jackpot.webm'));
-        const feverUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'TUCA_DONKA.mp4'));
+        const rollUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'jackpot.mp3'));
+        const feverUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'TUCA_DONKA.mp3'));
         const danceUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'hakari-dance.gif'));
 
         const config = vscode.workspace.getConfiguration('hakari');
@@ -174,8 +174,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     <div id="timer">04:11:00</div>
                 </div>
 
-                <audio id="roll-audio" src="${rollUri}"></audio>
-                <audio id="fever-audio" src="${feverUri}"></audio>
+                <audio id="roll-audio" src="${rollUri}" preload="auto"></audio>
+                <audio id="fever-audio" src="${feverUri}" preload="auto"></audio>
 
                 <script>
                     const vscode = acquireVsCodeApi();

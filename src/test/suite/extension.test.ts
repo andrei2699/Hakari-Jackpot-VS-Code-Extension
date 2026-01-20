@@ -18,9 +18,9 @@ suite('Extension Test Suite', () => {
         const neededAssets = [
             'Hakari_logo.png',
             'Hakari_logo.svg',
-            'TUCA_DONKA.mp4',
+            'TUCA_DONKA.mp3',
             'hakari-dance.gif',
-            'jackpot.webm'
+            'jackpot.mp3'
         ];
 
         for (const asset of neededAssets) {
