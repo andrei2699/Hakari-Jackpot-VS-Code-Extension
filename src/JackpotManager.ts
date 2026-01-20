@@ -98,6 +98,7 @@ export class JackpotManager {
     private handleLoss() {
         this.isRolling = false;
         vscode.window.showInformationMessage("Tch... Missed.");
+        this.sidebar?.playLoss();
         this.sidebar?.stop();
     }
 

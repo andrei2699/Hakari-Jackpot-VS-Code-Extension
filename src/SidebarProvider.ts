@@ -62,9 +62,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         this._view?.webview.postMessage({ type: 'updateConfig', disableFlashingLights });
     }
 
+    public playLoss() {
+        this._view?.webview.postMessage({ type: 'playLoss' });
+    }
+
     private _getHtmlForWebview(webview: vscode.Webview) {
         const rollUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'jackpot.mp3'));
         const feverUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'TUCA_DONKA.mp3'));
+        const lossUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'aw-dangit.mp3'));
         const danceUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'hakari-dance.gif'));
 
         const config = vscode.workspace.getConfiguration('hakari');
@@ -176,6 +181,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
                 <audio id="roll-audio" src="${rollUri}" preload="auto"></audio>
                 <audio id="fever-audio" src="${feverUri}" preload="auto"></audio>
+                <audio id="loss-audio" src="${lossUri}" preload="auto"></audio>
 
                 <script>
                     const vscode = acquireVsCodeApi();
@@ -184,6 +190,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                     const rollBtn = document.getElementById('roll-btn');
                     const rollAudio = document.getElementById('roll-audio');
                     const feverAudio = document.getElementById('fever-audio');
+                    const lossAudio = document.getElementById('loss-audio');
                     const feverOverlay = document.getElementById('fever-overlay');
                     const timerElement = document.getElementById('timer');
                     const sparklesContainer = document.getElementById('sparkles-container');
@@ -218,6 +225,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                                 break;
                             case 'stop':
                                 stopAll();
+                                break;
+                            case 'playLoss':
+                                tryPlayAudio(lossAudio);
                                 break;
                             case 'updateConfig':
                                 disableFlashingLights = message.disableFlashingLights;
