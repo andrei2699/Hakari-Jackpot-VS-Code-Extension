@@ -1,7 +1,7 @@
 {
     "name": "hakari-idle-death-gamble",
     "displayName": "Idle Death Gamble",
-    "description": "Trigger a jackpot fever with dancing Hakari when your tests pass.",
+    "description": "Trigger a jackpot fever with dancing Hakari when your tests pass or whenever you want.",
     "publisher": "andrei2699",
     "repository": {
         "type": "git",
