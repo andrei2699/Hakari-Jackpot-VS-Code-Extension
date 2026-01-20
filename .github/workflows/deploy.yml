@@ -25,7 +25,14 @@ jobs:
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
     - name: Update version in package.json
-      run: npm version ${{ steps.get_version.outputs.VERSION }} --no-git-tag-version
+      run: |
+        NEW_VERSION=${{ steps.get_version.outputs.VERSION }}
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+          npm version $NEW_VERSION --no-git-tag-version
+        else
+          echo "Version is already $NEW_VERSION, skipping update."
+        fi
     - name: Package Extension
       run: npx vsce package
     - name: Publish to VS Code Marketplace
