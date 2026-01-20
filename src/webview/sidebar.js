@@ -1,7 +1,6 @@
 const vscode = acquireVsCodeApi();
 let isAutoFlashingDisabled = document.body.dataset.disableFlashingLights === 'true';
 
-const manualRollButton = document.getElementById('roll-btn');
 const mechanicalHandle = document.getElementById('slot-handle');
 const rollSoundEffect = document.getElementById('roll-audio');
 const feverMusicTrack = document.getElementById('fever-audio');
@@ -12,7 +11,7 @@ const particlesContainer = document.getElementById('sparkles-container');
 const machineStatusDisplay = document.getElementById('machine-status');
 
 const SLOT_SYMBOLS = ['🎰', '🍒', '🍋', '🍐', '🔔', '💎', '7️⃣'];
-const REEL_CAPACITY = 60;
+const REEL_CAPACITY = 80;
 const SYMBOL_HEIGHT_PX = 50;
 
 let frameRequestIdentifier;
@@ -68,7 +67,6 @@ function initiateGambleTrigger() {
     vscode.postMessage({ type: 'roll' });
 }
 
-manualRollButton.addEventListener('click', initiateGambleTrigger);
 mechanicalHandle.addEventListener('click', initiateGambleTrigger);
 
 async function attemptAudioPlayback(audio, remainingRetries = AUDIO_MAX_RETRIES) {
@@ -127,21 +125,24 @@ function executeRollSequence(isWinningRoll, rollDurationMs) {
         void strip.offsetHeight;
     });
 
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            reelStrips.forEach((strip, index) => {
-                const symbols = strip.children;
-                const targetSymbol = isWinningRoll ? '7️⃣' : SLOT_SYMBOLS[Math.floor(Math.random() * (SLOT_SYMBOLS.length - 1))];
-                symbols[REEL_CAPACITY - 2].textContent = targetSymbol;
+    setTimeout(() => {
+        reelStrips.forEach((strip, index) => {
+            const symbols = strip.children;
+            const targetSymbol = isWinningRoll ? '7️⃣' : SLOT_SYMBOLS[Math.floor(Math.random() * (SLOT_SYMBOLS.length - 1))];
 
-                const scrollDistance = (REEL_CAPACITY - 3) * SYMBOL_HEIGHT_PX;
-                const durationForThisReel = animationDurationSeconds - (1.0 - (index * 0.5));
+            for (let i = 2; i < REEL_CAPACITY - 2; i++) {
+                symbols[i].textContent = SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)];
+            }
 
-                strip.style.transition = `transform ${durationForThisReel}s cubic-bezier(0.1, 0, 0.1, 1)`;
-                strip.style.transform = `translateY(-${scrollDistance}px)`;
-            });
+            symbols[REEL_CAPACITY - 2].textContent = targetSymbol;
+
+            const scrollDistance = (REEL_CAPACITY - 3) * SYMBOL_HEIGHT_PX;
+            const durationForThisReel = animationDurationSeconds - (1.0 - (index * 0.5));
+
+            strip.style.transition = `transform ${durationForThisReel}s cubic-bezier(0.1, 0, 0.1, 1)`;
+            strip.style.transform = `translateY(-${scrollDistance}px)`;
         });
-    });
+    }, 50);
 
     setTimeout(() => {
         if (isWinningRoll) {
