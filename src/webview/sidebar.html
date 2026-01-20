@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{cssUri}}">
+</head>
+
+<body data-disable-flashing-lights="{{disableFlashingLights}}">
+    <div class="title">Idle Death Gamble</div>
+    <p>Feeling lucky?</p>
+    <button id="roll-btn">MANUAL ROLL</button>
+
+    <div id="fever-overlay">
+        <div id="sparkles-container"
+            style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+        <img src="{{danceUri}}" alt="Hakari Dance">
+        <div id="timer">04:11:00</div>
+    </div>
+
+    <audio id="roll-audio" src="{{rollUri}}" preload="auto"></audio>
+    <audio id="fever-audio" src="{{feverUri}}" preload="auto"></audio>
+    <audio id="loss-audio" src="{{lossUri}}" preload="auto"></audio>
+
+    <script src="{{jsUri}}"></script>
+</body>
+
+</html>

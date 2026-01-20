@@ -20,7 +20,8 @@ suite('Extension Test Suite', () => {
             'Hakari_logo.svg',
             'TUCA_DONKA.mp3',
             'hakari-dance.gif',
-            'jackpot.mp3'
+            'jackpot.mp3',
+            'aw-dangit.mp3'
         ];
 
         for (const asset of neededAssets) {
@@ -79,5 +80,49 @@ suite('Extension Test Suite', () => {
     test('Configuration should include disableFlashingLights', () => {
         const config = vscode.workspace.getConfiguration('hakari');
         assert.notStrictEqual(config.get('disableFlashingLights'), undefined);
+    });
+
+    test('Webview template files should exist', async () => {
+        const ext = vscode.extensions.getExtension('andrei2699.hakari-idle-death-gamble');
+        assert.ok(ext, 'Extension not found');
+
+        const webviewFiles = [
+            'src/webview/sidebar.html',
+            'src/webview/sidebar.css',
+            'src/webview/sidebar.js'
+        ];
+
+        for (const file of webviewFiles) {
+            const fileUri = vscode.Uri.joinPath(ext.extensionUri, file);
+            try {
+                await vscode.workspace.fs.stat(fileUri);
+                assert.ok(true, `${file} found`);
+            } catch (e) {
+                assert.fail(`${file} missing`);
+            }
+        }
+    });
+
+    test('Sidebar HTML template should contain required placeholders', async () => {
+        const ext = vscode.extensions.getExtension('andrei2699.hakari-idle-death-gamble');
+        assert.ok(ext, 'Extension not found');
+
+        const htmlUri = vscode.Uri.joinPath(ext.extensionUri, 'src', 'webview', 'sidebar.html');
+        const htmlContent = await vscode.workspace.fs.readFile(htmlUri);
+        const html = Buffer.from(htmlContent).toString('utf8');
+
+        const requiredPlaceholders = [
+            '{{cssUri}}',
+            '{{jsUri}}',
+            '{{rollUri}}',
+            '{{feverUri}}',
+            '{{lossUri}}',
+            '{{danceUri}}',
+            '{{disableFlashingLights}}'
+        ];
+
+        for (const placeholder of requiredPlaceholders) {
+            assert.ok(html.includes(placeholder), `Missing placeholder: ${placeholder}`);
+        }
     });
 });
