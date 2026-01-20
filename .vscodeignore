@@ -1,0 +1,15 @@
+.vscode/**
+.vscode-test/**
+media/**
+src/test/**
+src/*.ts
+out/test/**
+test-fixtures/**
+.gitignore
+.vscodeignore
+vsc-extension-quickstart.md
+tsconfig.json
+.eslintrc.json
+**/*.map
+**/*.ts
+!src/webview/**

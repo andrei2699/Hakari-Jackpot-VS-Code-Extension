@@ -1,5 +1,14 @@
 # 🎰 VS Code: Idle Death Gamble (Hakari Dance)
 
+<p align="center">
+  <img src="media/hakari-dance.gif" alt="Hakari Dance" />
+  <br>
+  <small><i>Hakari Dance</i></small>
+  <br>
+  <small><i>Credit: <a href="https://tenor.com/view/hakari-hakari-dance-jjk-jujutsu-kaisen-gif-2949665050985068692">Titan2</a></i></small>
+</p>
+
+
 > **"In the 4 minutes and 11 seconds following a jackpot, Hakari is effectively immortal."**
 
 Turn your coding sessions into a high-stakes gamble. When you hit the jackpot, your workspace transforms into a legendary "Fever" state featuring **Tuka Donka** and Hakari’s iconic dance.
@@ -39,6 +48,10 @@ Customize your gamble in VS Code settings:
 *   `hakari.feverSpeed`: Speed multiplier for flashing colors and effects (`0.1` - `5.0`).
 *   `hakari.triggerOnTestSuccess`: Automatically roll when your tests pass.
 *   `hakari.disableFlashingLights`: Toggle accessibility mode to disable flashing disco effects.
+
+## 📸 Screenshots
+
+![Slot Machine Preview](media/slot_machine_preview.png)
 
 ## 📜 Credits
 
