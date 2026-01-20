@@ -3,6 +3,7 @@
     --machine-gold-dark: #b8860b;
     --machine-red: #ff4444;
     --reel-bg: #fdfdfd;
+    --fever-flash-duration: 1s;
 }
 
 body {
@@ -257,7 +258,7 @@ body {
 }
 
 #fever-overlay.party-mode::before {
-    animation: intense-disco 1s infinite alternate;
+    animation: intense-disco var(--fever-flash-duration) infinite alternate;
 }
 
 @keyframes intense-disco {

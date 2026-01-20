@@ -59,8 +59,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         this._view?.webview.postMessage({ type: 'stop' });
     }
 
-    public updateConfig(disableFlashingLights: boolean) {
-        this._view?.webview.postMessage({ type: 'updateConfig', disableFlashingLights });
+    public updateConfig(disableFlashingLights: boolean, feverSpeed: number) {
+        this._view?.webview.postMessage({ type: 'updateConfig', disableFlashingLights, feverSpeed });
     }
 
     public playLoss() {
@@ -70,7 +70,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     private _getHtmlForWebview(webview: vscode.Webview): string {
         const assetUris = this._getAssetUris(webview);
         const webviewUris = this._getWebviewResourceUris(webview);
-        const disableFlashingLights = this._getFlashingLightsConfig();
+        const { disableFlashingLights, feverSpeed } = this._getFeverConfig();
 
         const htmlTemplatePath = path.join(this._extensionUri.fsPath, 'src', 'webview', 'sidebar.html');
         const htmlTemplate = fs.readFileSync(htmlTemplatePath, 'utf8');
@@ -78,7 +78,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         return this._populateTemplate(htmlTemplate, {
             ...assetUris,
             ...webviewUris,
-            disableFlashingLights: disableFlashingLights.toString()
+            disableFlashingLights: disableFlashingLights.toString(),
+            feverSpeed: feverSpeed.toString()
         });
     }
 
@@ -98,9 +99,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         };
     }
 
-    private _getFlashingLightsConfig(): boolean {
+    private _getFeverConfig() {
         const config = vscode.workspace.getConfiguration('hakari');
-        return config.get<boolean>('disableFlashingLights', false);
+        return {
+            disableFlashingLights: config.get<boolean>('disableFlashingLights', false),
+            feverSpeed: config.get<number>('feverSpeed', 1.0)
+        };
     }
 
     private _populateTemplate(template: string, replacements: Record<string, string | vscode.Uri>): string {

@@ -40,9 +40,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration(e => {
-            if (e.affectsConfiguration('hakari.disableFlashingLights')) {
+            if (e.affectsConfiguration('hakari.disableFlashingLights') || e.affectsConfiguration('hakari.feverSpeed')) {
                 const config = vscode.workspace.getConfiguration('hakari');
-                sidebarProvider.updateConfig(config.get<boolean>('disableFlashingLights', false));
+                sidebarProvider.updateConfig(
+                    config.get<boolean>('disableFlashingLights', false),
+                    config.get<number>('feverSpeed', 1.0)
+                );
             }
         })
     );

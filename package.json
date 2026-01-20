@@ -17,7 +17,7 @@
         "hakari jackpot",
         "vscode extension"
     ],
-    "version": "0.0.1",
+    "version": "1.1.0",
     "icon": "assets/Hakari_logo.png",
     "engines": {
         "vscode": "^1.80.0"
@@ -53,6 +53,13 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Disable flashing background colors and sparkle effects during Jackpot Fever (Accessibility)."
+                },
+                "hakari.feverSpeed": {
+                    "type": "number",
+                    "default": 2.5,
+                    "minimum": 0.1,
+                    "maximum": 5.0,
+                    "description": "Speed multiplier for Fever mode flashing colors and effects (0.1 - 5.0)."
                 }
             }
         },

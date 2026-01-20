@@ -1,5 +1,6 @@
 const vscode = acquireVsCodeApi();
 let isAutoFlashingDisabled = document.body.dataset.disableFlashingLights === 'true';
+let currentFeverSpeed = parseFloat(document.body.dataset.feverSpeed) || 1.0;
 
 const mechanicalHandle = document.getElementById('slot-handle');
 const rollSoundEffect = document.getElementById('roll-audio');
@@ -21,7 +22,7 @@ let reelResetTimeoutIdentifier;
 const FEVER_TOTAL_DURATION_MS = 251000;
 const AUDIO_MAX_RETRIES = 3;
 const AUDIO_RETRY_INTERVAL_MS = 100;
-const SPARKLE_SPAWN_INTERVAL_MS = 200;
+let sparkleSpawnIntervalMs = 200 / currentFeverSpeed;
 const AUDIO_FADE_THRESHOLD_MS = 5000;
 
 document.addEventListener('click', () => {
@@ -98,7 +99,7 @@ window.addEventListener('message', event => {
             terminateAllState();
             break;
         case 'updateConfig':
-            refreshConfiguration(payload.disableFlashingLights);
+            refreshConfiguration(payload.disableFlashingLights, payload.feverSpeed);
             break;
     }
 });
@@ -179,13 +180,30 @@ function resetSlotReels() {
     machineStatusDisplay.classList.remove('jackpot-glow', 'miss-glow');
 }
 
-function refreshConfiguration(isDisabled) {
+function refreshConfiguration(isDisabled, speed) {
     isAutoFlashingDisabled = isDisabled;
+    if (speed !== undefined) {
+        currentFeverSpeed = speed;
+        sparkleSpawnIntervalMs = 200 / speed;
+        document.documentElement.style.setProperty('--fever-flash-duration', `${1 / speed}s`);
+    }
+
     if (isAutoFlashingDisabled) {
         jackpotOverlay.classList.remove('party-mode');
         particlesContainer.innerHTML = '';
+        if (sparkleTimerIdentifier) {
+            clearInterval(sparkleTimerIdentifier);
+            sparkleTimerIdentifier = null;
+        }
     } else if (jackpotOverlay.style.display === 'flex') {
         jackpotOverlay.classList.add('party-mode');
+        if (!sparkleTimerIdentifier) {
+            sparkleTimerIdentifier = setInterval(spawnVisualSparkle, sparkleSpawnIntervalMs);
+        } else {
+            // Restart with new interval
+            clearInterval(sparkleTimerIdentifier);
+            sparkleTimerIdentifier = setInterval(spawnVisualSparkle, sparkleSpawnIntervalMs);
+        }
     }
 }
 
@@ -210,7 +228,8 @@ function activateJackpotFever(resumeMs) {
 
     attemptAudioPlayback(feverMusicTrack);
     if (sparkleTimerIdentifier) clearInterval(sparkleTimerIdentifier);
-    sparkleTimerIdentifier = setInterval(spawnVisualSparkle, SPARKLE_SPAWN_INTERVAL_MS);
+    sparkleTimerIdentifier = setInterval(spawnVisualSparkle, sparkleSpawnIntervalMs);
+    document.documentElement.style.setProperty('--fever-flash-duration', `${1 / currentFeverSpeed}s`);
 
     function updateCountdown() {
         const now = Date.now();
