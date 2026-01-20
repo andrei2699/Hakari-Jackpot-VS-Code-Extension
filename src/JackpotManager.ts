@@ -8,9 +8,9 @@ export class JackpotManager {
     private sidebar: SidebarProvider | undefined;
     private feverTimer: NodeJS.Timeout | undefined;
 
-    private readonly FEVER_DURATION_MS = 251000;
-    private readonly ROLL_BUILDUP_DURATION_MS = 6000;
-    private readonly WIN_REVEAL_DELAY_MS = 3000;
+    private readonly feverDurationMs = 251000;
+    private readonly rollBuildupDurationMs = 6000;
+    private readonly winRevealDelayMs = 3000;
 
     constructor(context: vscode.ExtensionContext) {
     }
@@ -52,14 +52,14 @@ export class JackpotManager {
                 const chance = config.get<number>('jackpotChance', 0.8);
                 const isWin = Math.random() < chance;
 
-                this.sidebar?.playRoll(isWin, this.ROLL_BUILDUP_DURATION_MS);
+                this.sidebar?.playRoll(isWin, this.rollBuildupDurationMs);
                 progress.report({ message: "Calculating luck..." });
 
-                await new Promise(resolve => setTimeout(resolve, this.ROLL_BUILDUP_DURATION_MS));
+                await new Promise(resolve => setTimeout(resolve, this.rollBuildupDurationMs));
 
                 if (isWin) {
                     progress.report({ message: "JACKPOT REVEALED!" });
-                    await new Promise(resolve => setTimeout(resolve, this.WIN_REVEAL_DELAY_MS));
+                    await new Promise(resolve => setTimeout(resolve, this.winRevealDelayMs));
                     this.triggerJackpot();
                 } else {
                     this.handleLoss();
@@ -87,7 +87,7 @@ export class JackpotManager {
     private triggerJackpot() {
         this.isRolling = false;
         this.isFever = true;
-        this.feverEndTime = Date.now() + this.FEVER_DURATION_MS;
+        this.feverEndTime = Date.now() + this.feverDurationMs;
         this.sidebar?.startFever();
 
         if (this.feverTimer) {
@@ -96,7 +96,7 @@ export class JackpotManager {
 
         this.feverTimer = setTimeout(() => {
             this.endFever();
-        }, this.FEVER_DURATION_MS);
+        }, this.feverDurationMs);
     }
 
     private handleLoss() {
