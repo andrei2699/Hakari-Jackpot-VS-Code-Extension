@@ -47,8 +47,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         }
     }
 
-    public playRoll() {
-        this._view?.webview.postMessage({ type: 'playRoll' });
+    public playRoll(isWin: boolean, duration: number) {
+        this._view?.webview.postMessage({ type: 'playRoll', isWin, duration });
     }
 
     public startFever() {

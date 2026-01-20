@@ -9,7 +9,36 @@
 
 <body data-disable-flashing-lights="{{disableFlashingLights}}">
     <div class="title">Idle Death Gamble</div>
-    <p>Feeling lucky?</p>
+
+    <div class="slot-machine">
+        <div class="machine-body">
+            <div class="reels-window">
+                <div class="reels-container" id="reels">
+                    <div class="reel" id="reel-1">
+                        <div class="reel-strip"></div>
+                    </div>
+                    <div class="reel" id="reel-2">
+                        <div class="reel-strip"></div>
+                    </div>
+                    <div class="reel" id="reel-3">
+                        <div class="reel-strip"></div>
+                    </div>
+                </div>
+                <div class="payline"></div>
+            </div>
+            <div class="status-display" id="machine-status">READY</div>
+        </div>
+
+        <div class="handle-container" id="slot-handle">
+            <div class="handle-base"></div>
+            <div class="handle-arm-pivot">
+                <div class="handle-arm">
+                    <div class="handle-knob"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <button id="roll-btn">MANUAL ROLL</button>
 
     <div id="fever-overlay">

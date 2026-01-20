@@ -7,8 +7,10 @@ export class JackpotManager {
     private feverEndTime: number | undefined;
     private sidebar: SidebarProvider | undefined;
     private feverTimer: NodeJS.Timeout | undefined;
-    private readonly feverDurationMs = 251000;
-    private readonly rollDurationMs = 2000;
+
+    private readonly FEVER_DURATION_MS = 251000;
+    private readonly ROLL_BUILDUP_DURATION_MS = 6000;
+    private readonly WIN_REVEAL_DELAY_MS = 3000;
 
     constructor(context: vscode.ExtensionContext) {
     }
@@ -40,30 +42,35 @@ export class JackpotManager {
 
         this.isRolling = true;
 
-        try {
-            this.sidebar?.playRoll();
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "Idle Death Gamble",
+            cancellable: false
+        }, async (progress) => {
+            try {
+                const config = vscode.workspace.getConfiguration('hakari');
+                const chance = config.get<number>('jackpotChance', 0.8);
+                const isWin = Math.random() < chance;
 
-            const config = vscode.workspace.getConfiguration('hakari');
-            const chance = config.get<number>('jackpotChance', 0.8);
-            const roll = Math.random();
+                this.sidebar?.playRoll(isWin, this.ROLL_BUILDUP_DURATION_MS);
+                progress.report({ message: "Calculating luck..." });
 
-            const win = roll < chance;
+                await new Promise(resolve => setTimeout(resolve, this.ROLL_BUILDUP_DURATION_MS));
 
-            await new Promise(resolve => setTimeout(resolve, this.rollDurationMs));
-
-            if (win) {
-                this.triggerJackpot();
-            } else {
-                this.handleLoss();
+                if (isWin) {
+                    progress.report({ message: "JACKPOT REVEALED!" });
+                    await new Promise(resolve => setTimeout(resolve, this.WIN_REVEAL_DELAY_MS));
+                    this.triggerJackpot();
+                } else {
+                    this.handleLoss();
+                }
+            } catch (error) {
+                this.isRolling = false;
+                if (manual) {
+                    vscode.window.showErrorMessage("Gamble failed. State reset.");
+                }
             }
-        } catch (error) {
-            console.error('Error during gamble:', error);
-            this.isRolling = false;
-
-            if (manual) {
-                vscode.window.showErrorMessage("Gamble failed due to an error. State has been reset.");
-            }
-        }
+        });
     }
 
     public resetState() {
@@ -80,10 +87,7 @@ export class JackpotManager {
     private triggerJackpot() {
         this.isRolling = false;
         this.isFever = true;
-        this.feverEndTime = Date.now() + this.feverDurationMs;
-
-        vscode.window.showInformationMessage("JACKPOT! FEVER TIME!");
-
+        this.feverEndTime = Date.now() + this.FEVER_DURATION_MS;
         this.sidebar?.startFever();
 
         if (this.feverTimer) {
@@ -92,14 +96,13 @@ export class JackpotManager {
 
         this.feverTimer = setTimeout(() => {
             this.endFever();
-        }, this.feverDurationMs);
+        }, this.FEVER_DURATION_MS);
     }
 
     private handleLoss() {
         this.isRolling = false;
-        vscode.window.showInformationMessage("Tch... Missed.");
+        vscode.window.setStatusBarMessage("Tch... Missed.", 3000);
         this.sidebar?.playLoss();
-        this.sidebar?.stop();
     }
 
     private endFever() {
