@@ -61,8 +61,7 @@
                     "type": "number",
                     "default": 2.5,
                     "minimum": 0.1,
-                    "maximum": 5.0,
-                    "description": "Speed multiplier for Fever mode flashing colors and effects (0.1 - 5.0)."
+                    "description": "Speed multiplier for Fever mode flashing colors and effects."
                 }
             }
         },

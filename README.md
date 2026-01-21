@@ -66,7 +66,7 @@ Invoke-WebRequest -Uri "https://marketplace.visualstudio.com/_apis/public/galler
 Customize your gamble in VS Code settings:
 
 *   `hakari.jackpotChance`: Probability of hitting a jackpot (default: `0.8`).
-*   `hakari.feverSpeed`: Speed multiplier for flashing colors and effects (`0.1` - `5.0`).
+*   `hakari.feverSpeed`: Speed multiplier for flashing colors and effects.
 *   `hakari.triggerOnTestSuccess`: Automatically roll when your tests pass.
 *   `hakari.disableFlashingLights`: Toggle accessibility mode to disable flashing disco effects.
 

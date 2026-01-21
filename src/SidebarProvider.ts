@@ -120,7 +120,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         const config = vscode.workspace.getConfiguration('hakari');
         return {
             disableFlashingLights: config.get<boolean>('disableFlashingLights', false),
-            feverSpeed: config.get<number>('feverSpeed', 1.0)
+            feverSpeed: config.get<number>('feverSpeed', 2.5)
         };
     }
 

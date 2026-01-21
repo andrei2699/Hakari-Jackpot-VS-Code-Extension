@@ -1,7 +1,7 @@
 const vscode = acquireVsCodeApi();
 vscode.postMessage({ type: 'ready' });
 let isAutoFlashingDisabled = document.body.dataset.disableFlashingLights === 'true';
-let currentFeverSpeed = parseFloat(document.body.dataset.feverSpeed) || 1.0;
+let currentFeverSpeed = parseFloat(document.body.dataset.feverSpeed) || 2.5;
 
 const mechanicalHandle = document.getElementById('slot-handle');
 const rollSoundEffect = document.getElementById('roll-audio');

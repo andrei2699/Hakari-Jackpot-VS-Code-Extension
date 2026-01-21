@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
                 const config = vscode.workspace.getConfiguration('hakari');
                 sidebarProvider.updateConfig(
                     config.get<boolean>('disableFlashingLights', false),
-                    config.get<number>('feverSpeed', 1.0)
+                    config.get<number>('feverSpeed', 2.5)
                 );
             }
         })
