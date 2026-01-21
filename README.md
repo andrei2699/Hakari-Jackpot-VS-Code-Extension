@@ -50,8 +50,15 @@ or for non VS Code
 
 
 example Cursor:
+
+#### Linux
 ```bash
 curl -L https://marketplace.visualstudio.com/_apis/public/gallery/publishers/andrei2699/vsextensions/hakari-idle-death-gamble/latest/vspackage -o /tmp/extension.vsix.gz && gunzip -f /tmp/extension.vsix.gz && cursor --install-extension /tmp/extension.vsix
+```
+
+#### Windows
+```powershell
+Invoke-WebRequest -Uri "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/andrei2699/vsextensions/hakari-idle-death-gamble/latest/vspackage" -OutFile "$env:TEMP\extension.vsix"; cursor --install-extension "$env:TEMP\extension.vsix"
 ```
 
 ## ⚙️ Configuration
