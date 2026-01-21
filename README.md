@@ -49,6 +49,12 @@ Customize your gamble in VS Code settings:
 *   `hakari.triggerOnTestSuccess`: Automatically roll when your tests pass.
 *   `hakari.disableFlashingLights`: Toggle accessibility mode to disable flashing disco effects.
 
+## ⚖️ License
+
+The source code of this extension is licensed under the **MIT License**.
+
+> This license does **NOT** apply to the media assets (audio, images, GIF) included in this repository. All assets are the property of their respective owners and are used here under fair use for transformative purposes. See [Credits](#📜-credits) for original sources.
+
 ## 📸 Screenshots
 
 ![Slot Machine Preview](media/slot_machine_preview.png)
