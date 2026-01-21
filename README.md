@@ -40,8 +40,10 @@ Turn your coding sessions into a high-stakes gamble. When you hit the jackpot, y
 code --install-extension hakari-idle-death-gamble-1.2.0.vsix
 ```
 
-or
+or for non VS Code
 
+
+example Cursor:
 ```bash
 curl -L https://marketplace.visualstudio.com/_apis/public/gallery/publishers/andrei2699/vsextensions/hakari-idle-death-gamble/latest/vspackage -o /tmp/extension.vsix.gz && gunzip -f /tmp/extension.vsix.gz && cursor --install-extension /tmp/extension.vsix
 ```
