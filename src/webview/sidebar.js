@@ -1,4 +1,5 @@
 const vscode = acquireVsCodeApi();
+vscode.postMessage({ type: 'ready' });
 let isAutoFlashingDisabled = document.body.dataset.disableFlashingLights === 'true';
 let currentFeverSpeed = parseFloat(document.body.dataset.feverSpeed) || 1.0;
 
@@ -99,6 +100,9 @@ window.addEventListener('message', event => {
             break;
         case 'updateConfig':
             refreshConfiguration(payload.disableFlashingLights, payload.feverSpeed);
+            break;
+        case 'playWelcome':
+            handleWelcomePlayback();
             break;
     }
 });

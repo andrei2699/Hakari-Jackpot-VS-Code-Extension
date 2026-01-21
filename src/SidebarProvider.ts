@@ -24,15 +24,27 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             localResourceRoots: [this._extensionUri]
         };
 
-        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        const setWebContent = () => {
+            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        };
 
+        let isReady = false;
         webviewView.webview.onDidReceiveMessage(data => {
-            if (data.type === 'roll') {
+            if (data.type === 'ready') {
+                isReady = true;
+                this._resumeFeverIfActive();
+            } else if (data.type === 'roll') {
                 this._jackpotManager.attemptGamble(true);
             }
         });
 
-        this._resumeFeverIfActive();
+        setWebContent();
+
+        setTimeout(() => {
+            if (!isReady && webviewView.visible) {
+                setWebContent();
+            }
+        }, 1500);
     }
 
     private _resumeFeverIfActive() {
@@ -65,6 +77,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     public playLoss() {
         this._view?.webview.postMessage({ type: 'playLoss' });
+    }
+
+    public playWelcome() {
+        this._view?.webview.postMessage({ type: 'playWelcome' });
     }
 
     private _getHtmlForWebview(webview: vscode.Webview): string {

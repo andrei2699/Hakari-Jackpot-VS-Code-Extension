@@ -70,6 +70,24 @@ Customize your gamble in VS Code settings:
 *   `hakari.triggerOnTestSuccess`: Automatically roll when your tests pass.
 *   `hakari.disableFlashingLights`: Toggle accessibility mode to disable flashing disco effects.
 
+## 🛠 Troubleshooting
+
+### "InvalidStateError" or Black Screen
+If the sidebar appears as a black screen or shows a "Service Worker" error during a VS Code update or extension restart:
+
+1.  **Auto-Recovery:** The extension includes a self-healing mechanism that reloads the webview automatically once if it detects a failure.
+2.  **Hard Reset:** If the black screen persists, VS Code's internal cache may be corrupted.
+    - Close VS Code.
+    - Delete this folder: 
+        - **Windows:** `%APPDATA%\Code\Service Worker`
+        - **Mac:** `~/Library/Application Support/Code/Service Worker`
+        - **Linux:** `~/.config/Code/Service Worker`
+    - Restart VS Code.  
+
+See the following issues for more information:
+ - https://github.com/microsoft/vscode/issues/125993
+ - https://github.com/microsoft/vscode/issues/247035
+
 ## ⚖️ License
 
 The source code of this extension is licensed under the **MIT License**.

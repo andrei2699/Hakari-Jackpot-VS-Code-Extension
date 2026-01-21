@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { JackpotManager } from './JackpotManager';
 import { SidebarProvider } from './SidebarProvider';
+import { TestTriggerManager } from './TestTriggerManager';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Idle Death Gamble is active. Good luck.');
@@ -11,21 +12,11 @@ export function activate(context: vscode.ExtensionContext) {
         jackpotManager.attemptGamble(true);
     });
 
-    const taskListener = vscode.tasks.onDidEndTaskProcess(event => {
-        const config = vscode.workspace.getConfiguration('hakari');
-        const triggerOnSuccess = config.get<boolean>('triggerOnTestSuccess', true);
-
-        if (!triggerOnSuccess) {
-            return;
-        }
-
-        if (event.exitCode === 0) {
-            jackpotManager.attemptGamble();
-        }
-    });
-
     const sidebarProvider = new SidebarProvider(context.extensionUri, jackpotManager);
     jackpotManager.setSidebar(sidebarProvider);
+
+    const testTriggerManager = new TestTriggerManager(jackpotManager, sidebarProvider);
+
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
             SidebarProvider.viewType,
@@ -50,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    context.subscriptions.push(jackpotManager, gambleCommand, taskListener);
+    context.subscriptions.push(jackpotManager, gambleCommand, testTriggerManager);
 }
 
 export function deactivate() { }
