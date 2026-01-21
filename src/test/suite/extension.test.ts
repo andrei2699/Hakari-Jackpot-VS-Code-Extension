@@ -21,7 +21,8 @@ suite('Extension Test Suite', () => {
             'TUCA_DONKA.mp3',
             'hakari-dance.gif',
             'jackpot.mp3',
-            'aw-dangit.mp3'
+            'aw-dangit.mp3',
+            'lets-go-gambling.mp3'
         ];
 
         for (const asset of neededAssets) {
@@ -120,6 +121,7 @@ suite('Extension Test Suite', () => {
             '{{feverUri}}',
             '{{lossUri}}',
             '{{danceUri}}',
+            '{{welcomeUri}}',
             '{{disableFlashingLights}}',
             '{{feverSpeed}}'
         ];

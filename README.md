@@ -36,8 +36,14 @@ Turn your coding sessions into a high-stakes gamble. When you hit the jackpot, y
 3.  In VS Code, run **"Extensions: Install from VSIX..."** from the Command Palette.
 
 ### Via Command Line
+Install from Marketplace:
 ```bash
-code --install-extension hakari-idle-death-gamble-1.2.0.vsix
+code --install-extension andrei2699.hakari-idle-death-gamble
+```
+
+Install from local `.vsix`:
+```bash
+code --install-extension hakari-idle-death-gamble-1.3.0.vsix
 ```
 
 ## ⚙️ Configuration
@@ -64,4 +70,5 @@ The source code of this extension is licensed under the **MIT License**.
 *   **Music:** [TUCA DONKA [Brazilian Phonk] - CURSEDEVIL, DJ FKU, Skorde](https://www.youtube.com/watch?v=YDpNRw5geSA)
 *   **Animation/GIF:** [Titan2](https://tenor.com/view/hakari-hakari-dance-jjk-jujutsu-kaisen-gif-2949665050985068692)
 *   **Sound Effect:** [Slot Machine Jackpot](https://www.youtube.com/watch?v=qPwANcErhDU)
-*   **Sound Effect:** ["Aw Dangit" by lia573](https://www.myinstants.com/en/instant/aw-dangit-56663/)
+*   **Sound Effect:** ["Aw Dangit" uploaded by lia573](https://www.myinstants.com/en/instant/aw-dangit-56663/)
+*   **Sound Effect:** ["Let's go gambling" uploaded hampter7](https://www.myinstants.com/en/instant/lets-go-gambling-96828/)

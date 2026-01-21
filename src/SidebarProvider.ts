@@ -88,6 +88,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             rollUri: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'jackpot.mp3')),
             feverUri: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'TUCA_DONKA.mp3')),
             lossUri: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'aw-dangit.mp3')),
+            welcomeUri: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'lets-go-gambling.mp3')),
             danceUri: webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'assets', 'hakari-dance.gif'))
         };
     }

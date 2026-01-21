@@ -6,6 +6,7 @@ const mechanicalHandle = document.getElementById('slot-handle');
 const rollSoundEffect = document.getElementById('roll-audio');
 const feverMusicTrack = document.getElementById('fever-audio');
 const lossSoundEffect = document.getElementById('loss-audio');
+const welcomeSoundEffect = document.getElementById('welcome-audio');
 const jackpotOverlay = document.getElementById('fever-overlay');
 const feverCountdown = document.getElementById('timer');
 const particlesContainer = document.getElementById('sparkles-container');
@@ -25,12 +26,6 @@ const AUDIO_RETRY_INTERVAL_MS = 100;
 let sparkleSpawnIntervalMs = 200 / currentFeverSpeed;
 const AUDIO_FADE_THRESHOLD_MS = 5000;
 
-document.addEventListener('click', () => {
-    rollSoundEffect.load();
-    feverMusicTrack.load();
-    lossSoundEffect.load();
-}, { once: true });
-
 const reelStrips = [
     document.querySelector('#reel-1 .reel-strip'),
     document.querySelector('#reel-2 .reel-strip'),
@@ -49,6 +44,10 @@ function initializeSlotReels() {
     });
 }
 initializeSlotReels();
+
+window.addEventListener('load', () => {
+    handleWelcomePlayback();
+});
 
 function spawnVisualSparkle() {
     if (isAutoFlashingDisabled) return;
@@ -103,6 +102,23 @@ window.addEventListener('message', event => {
             break;
     }
 });
+
+let isWelcomeDeferred = false;
+async function handleWelcomePlayback() {
+    const success = await attemptAudioPlayback(welcomeSoundEffect);
+    isWelcomeDeferred = !success;
+}
+
+document.addEventListener('click', () => {
+    rollSoundEffect.load();
+    feverMusicTrack.load();
+    lossSoundEffect.load();
+    welcomeSoundEffect.load();
+
+    if (isWelcomeDeferred) {
+        handleWelcomePlayback();
+    }
+}, { once: true });
 
 function executeRollSequence(isWinningRoll, rollDurationMs) {
     if (document.body.classList.contains('is-rolling')) return;
