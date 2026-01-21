@@ -24,15 +24,40 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             localResourceRoots: [this._extensionUri]
         };
 
-        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        let hasLoaded = false;
+        const loadingTimeout = setTimeout(() => {
+            if (!hasLoaded) {
+                vscode.window.showErrorMessage(
+                    "Hakari Jackpot: Webview failed to initialize. This often happens if VS Code's internal state is corrupted.",
+                    "Retry",
+                    "Open Troubleshooting"
+                ).then(selection => {
+                    if (selection === "Retry") {
+                        this.resolveWebviewView(webviewView, context, _token);
+                    }
+                });
+            }
+        }, 5000);
 
         webviewView.webview.onDidReceiveMessage(data => {
-            if (data.type === 'roll') {
+            if (data.type === 'ready') {
+                hasLoaded = true;
+                clearTimeout(loadingTimeout);
+                this._resumeFeverIfActive();
+            } else if (data.type === 'roll') {
                 this._jackpotManager.attemptGamble(true);
+            } else if (data.type === 'error') {
+                vscode.window.showErrorMessage(`Hakari Jackpot Webview Error: ${data.message}`);
             }
         });
 
-        this._resumeFeverIfActive();
+        setTimeout(() => {
+            try {
+                webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+            } catch (err: any) {
+                vscode.window.showErrorMessage(`Failed to generate webview content: ${err.message}`);
+            }
+        }, 100);
     }
 
     private _resumeFeverIfActive() {
@@ -65,6 +90,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     public playLoss() {
         this._view?.webview.postMessage({ type: 'playLoss' });
+    }
+
+    public playWelcome() {
+        this._view?.webview.postMessage({ type: 'playWelcome' });
     }
 
     private _getHtmlForWebview(webview: vscode.Webview): string {
