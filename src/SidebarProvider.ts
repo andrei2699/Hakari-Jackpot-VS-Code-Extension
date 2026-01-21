@@ -24,40 +24,27 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             localResourceRoots: [this._extensionUri]
         };
 
-        let hasLoaded = false;
-        const loadingTimeout = setTimeout(() => {
-            if (!hasLoaded) {
-                vscode.window.showErrorMessage(
-                    "Hakari Jackpot: Webview failed to initialize. This often happens if VS Code's internal state is corrupted.",
-                    "Retry",
-                    "Open Troubleshooting"
-                ).then(selection => {
-                    if (selection === "Retry") {
-                        this.resolveWebviewView(webviewView, context, _token);
-                    }
-                });
-            }
-        }, 5000);
+        const setWebContent = () => {
+            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        };
 
+        let isReady = false;
         webviewView.webview.onDidReceiveMessage(data => {
             if (data.type === 'ready') {
-                hasLoaded = true;
-                clearTimeout(loadingTimeout);
+                isReady = true;
                 this._resumeFeverIfActive();
             } else if (data.type === 'roll') {
                 this._jackpotManager.attemptGamble(true);
-            } else if (data.type === 'error') {
-                vscode.window.showErrorMessage(`Hakari Jackpot Webview Error: ${data.message}`);
             }
         });
 
+        setWebContent();
+
         setTimeout(() => {
-            try {
-                webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-            } catch (err: any) {
-                vscode.window.showErrorMessage(`Failed to generate webview content: ${err.message}`);
+            if (!isReady && webviewView.visible) {
+                setWebContent();
             }
-        }, 100);
+        }, 1500);
     }
 
     private _resumeFeverIfActive() {
