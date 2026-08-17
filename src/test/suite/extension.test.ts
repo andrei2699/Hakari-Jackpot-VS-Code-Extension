@@ -96,7 +96,7 @@ suite('Extension Test Suite', () => {
         ];
 
         for (const file of webviewFiles) {
-            const fileUri = vscode.Uri.joinPath(ext.extensionUri, file);
+            const fileUri = vscode.Uri.joinPath(ext!.extensionUri, file);
             try {
                 await vscode.workspace.fs.stat(fileUri);
                 assert.ok(true, `${file} found`);
@@ -110,7 +110,7 @@ suite('Extension Test Suite', () => {
         const ext = vscode.extensions.getExtension('andrei2699.hakari-idle-death-gamble');
         assert.ok(ext, 'Extension not found');
 
-        const htmlUri = vscode.Uri.joinPath(ext.extensionUri, 'src', 'webview', 'sidebar.html');
+        const htmlUri = vscode.Uri.joinPath(ext!.extensionUri, 'src', 'webview', 'sidebar.html');
         const htmlContent = await vscode.workspace.fs.readFile(htmlUri);
         const html = Buffer.from(htmlContent).toString('utf8');
 
