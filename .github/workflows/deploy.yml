@@ -12,11 +12,9 @@ jobs:
       contents: write
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - name: Install Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
+      uses: actions/setup-node@v7
     - name: Install Dependencies
       run: npm install
     - name: Build
@@ -39,7 +37,7 @@ jobs:
       run: npx vsce publish -p ${{ secrets.VSCE_PAT }} --no-git-tag-version
       continue-on-error: true
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         files: "*.vsix"
         tag_name: v${{ steps.get_version.outputs.VERSION }}
